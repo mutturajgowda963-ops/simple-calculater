@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calculator Without Eval</title>
+
+<style>
+body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    background:#1e1e2f;
+    font-family:sans-serif;
+}
+
+.cal{
+    background:#2c2c54;
+    padding:20px;
+    border-radius:15px;
+    width:330px;
+}
+
+#d{
+    width:100%;
+    height:50px;
+    margin-bottom:10px;
+    font-size:20px;
+    text-align:right;
+    border:none;
+    border-radius:8px;
+    padding:5px;
+}
+
+.b{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:5px;
+}
+
+button{
+    height:45px;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.op{background:#4b0a2f;color:#fff;}
+.eq{background:#2335dc;color:#fff;}
+.cl{background:#e14e09;color:#fff;}
+</style>
+</head>
+
+<body>
+
+<div class="cal">
+<input id="d" readonly>
+
+<div class="b">
+<button class="cl" onclick="clr()">C</button>
+<button onclick="setOp('%')">%</button>
+<button onclick="setOp('>')">&gt;</button>
+<button onclick="setOp('<')">&lt;</button>
+
+<button onclick="setOp('==')">==</button>
+<button onclick="setOp('!=')">!=</button>
+<button onclick="setOp('&&')">&&</button>
+<button onclick="setOp('||')">||</button>
+
+<button onclick="addNum(7)">7</button>
+<button onclick="addNum(8)">8</button>
+<button onclick="addNum(9)">9</button>
+<button class="op" onclick="setOp('/')">/</button>
+
+<button onclick="addNum(4)">4</button>
+<button onclick="addNum(5)">5</button>
+<button onclick="addNum(6)">6</button>
+<button class="op" onclick="setOp('*')">*</button>
+
+<button onclick="addNum(1)">1</button>
+<button onclick="addNum(2)">2</button>
+<button onclick="addNum(3)">3</button>
+<button class="op" onclick="setOp('-')">-</button>
+
+<button onclick="addNum(0)">0</button>
+<button class="op" onclick="setOp('+')">+</button>
+<button class="eq" onclick="calculate()">=</button>
+</div>
+</div>
+
+<script>
+const d = document.getElementById("d");
+
+let firstNumber = "";
+let secondNumber = "";
+let operator = "";
+
+function addNum(num){
+    if(operator === ""){
+        firstNumber += num;
+        d.value = firstNumber;
+    } else {
+        secondNumber += num;
+        d.value = firstNumber + " " + operator + " " + secondNumber;
+    }
+}
+
+function setOp(op){
+    if(firstNumber === "") return;
+    if(operator !== "" && secondNumber === "") return;
+    operator = op;
+    d.value = firstNumber + " " + operator + " ";
+}
+
+function clr(){
+    firstNumber = "";
+    secondNumber = "";
+    operator = "";
+    d.value = "";
+}
+
+function calculate(){
+
+    if(firstNumber === "" || secondNumber === ""){
+        console.log("Incomplete Expression");
+        d.value = "Error";
+        return;
+    }
+
+    let num1 = parseFloat(firstNumber);
+    let num2 = parseFloat(secondNumber);
+    let result;
+
+    switch(operator){
+
+        // Arithmetic
+        case "+": result = num1 + num2; break;
+        case "-": result = num1 - num2; break;
+        case "*": result = num1 * num2; break;
+        case "/":
+            if(num2 === 0){
+                result = "Cannot divide by 0";
+            } else {
+                result = num1 / num2;
+            }
+            break;
+        case "%": result = num1 % num2; break;
+
+        // Comparison
+        case ">": result = num1 > num2; break;
+        case "<": result = num1 < num2; break;
+        case "==": result = num1 == num2; break;
+        case "!=": result = num1 != num2; break;
+
+        // Logical
+        case "&&": result = Boolean(num1) && Boolean(num2); break;
+        case "||": result = Boolean(num1) || Boolean(num2); break;
+
+        default: result = "Error";
+    }
+
+    // Show result in display
+    d.value = result;
+
+    // ✅ Console Output
+    console.log("-----------");
+    console.log("Expression:", num1, operator, num2);
+    console.log("Result:", result);
+    console.log("-----------");
+
+    // Reset
+    firstNumber = result.toString();
+    secondNumber = "";
+    operator = "";
+}
+</script>
+
+</body>
+</html>
